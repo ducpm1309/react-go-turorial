@@ -33,6 +33,7 @@ func main() {
 		}
 	}
 
+	// Connect to MongoDB Atlas
 	MONGODB_URI := os.Getenv("MONGODB_URI")
 	clientOptions := options.Client().ApplyURI(MONGODB_URI)	
 	client, err := mongo.Connect(context.Background(), clientOptions)
@@ -44,7 +45,7 @@ func main() {
 	defer client.Disconnect(context.Background())
 
 	err = client.Ping(context.Background(), nil)
-	if err != nil {
+	if err != nil {	
 		log.Fatal(err)
 	}
 
