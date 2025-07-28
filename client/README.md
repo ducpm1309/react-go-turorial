@@ -7,6 +7,59 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
+## Running the Application
+
+### Prerequisites
+- Node.js (v18+)
+- npm (v8+)
+
+### Installation
+1. Install dependencies:
+   ```
+   npm install
+   ```
+
+### Development
+1. Start the development server:
+   ```
+   npm run dev
+   ```
+2. Open your browser and navigate to `http://localhost:5173`
+
+### Production Build
+1. Create a production build:
+   ```
+   npm run build
+   ```
+2. Preview the production build locally:
+   ```
+   npm run preview
+   ```
+
+## Running Tests
+
+This project uses Vitest with React Testing Library for unit testing.
+
+### Running All Tests
+```
+npm test
+```
+
+### Running Tests in Watch Mode
+```
+npm test
+```
+
+### Running Tests with UI
+```
+npm run test:ui
+```
+
+### Generate Test Coverage Report
+```
+npm run coverage
+```
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
