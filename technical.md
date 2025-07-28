@@ -1,8 +1,6 @@
-# Full-stack Todo Application
+# Full-stack Application
 
-## Backend (Go)
-
-### Technologies
+Backend (Go):
 - Web Framework: Fiber (gofiber/fiber/v2) - a fast Express-inspired web framework
 - Database: MongoDB with the official Go driver (go.mongodb.org/mongo-driver)
 - Environment Variables: godotenv for loading .env configuration files
@@ -10,46 +8,7 @@
 - API: RESTful API design with CRUD operations for todo items
 - CORS: Implemented for allowing frontend access
 
-### Setup & Installation
-
-#### Prerequisites
-- Go 1.20+ installed
-- MongoDB Atlas account or local MongoDB instance
-- Air (optional, for hot reload)
-
-#### Configuration
-1. Clone the repository
-2. Create a `.env` file in the root directory with:
-```
-MONGODB_URI=your_mongodb_connection_string
-PORT=5000 # or your preferred port
-```
-
-#### Running the Backend
-1. Install dependencies:
-```bash
-go mod tidy
-```
-
-2. Run with Air (hot reload):
-```bash
-air
-```
-OR without Air:
-```bash
-go run main.go
-```
-
-### API Endpoints
-
-| Method | Endpoint     | Description            | Request Body                    | Response                          |
-|--------|-------------|------------------------|---------------------------------|-----------------------------------|
-| GET    | /api/todos  | Get all todos         | -                               | Array of todo objects             |
-| POST   | /api/todos  | Create a new todo     | `{"body": "Task description"}`  | Created todo object               |
-| PATCH  | /api/todos/:id | Mark todo as completed | -                           | `{"success": true}`               |
-| DELETE | /api/todos/:id | Delete a todo      | -                               | `{"success": true}`               |
-
-## Frontend (React):
+Frontend (React):
 - Framework: React 19 with TypeScript
 - Build Tool: Vite for fast development and optimized builds
 - UI Library: Chakra UI for styled components and theming
@@ -63,48 +22,12 @@ go run main.go
   + JSDOM: Browser-like environment for testing
   + Component/API Mocking: For isolated unit testing
 
-## Application Structure:
+Application Structure:
 - Todo application with features to create, list, update (mark complete), and delete tasks
 - MongoDB stores the todos with fields for ID, body text, and completion status
 - React components organized into modular files (Navbar, TodoForm, TodoList, TodoItem)
 - Environment-aware configuration (development vs production)
 
-## Project Structure
-```
-react-go/
-  ├── air.toml              # Air configuration for hot reload
-  ├── client/               # React frontend application
-  ├── go.mod                # Go module definition
-  ├── go.sum                # Go module checksum
-  ├── main.go               # Go backend entry point
-  └── tmp/                  # Temporary directory used by Air
-```
-
-## Running the Full Application
-
-### Development Mode
-1. Start the backend: 
-```bash
-air
-```
-2. In another terminal, start the frontend:
-```bash
-cd client
-npm run dev
-```
-3. Open your browser at http://localhost:5173
-
-### Production Mode
-1. Build the frontend:
-```bash
-cd client
-npm run build
-```
-2. Start the backend (which will serve the frontend):
-```bash
-go run main.go
-```
-3. Open your browser at http://localhost:5000
 
 < ------------------------------------------------------------------------------------------------------ >
 
