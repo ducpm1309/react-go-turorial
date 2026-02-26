@@ -3,7 +3,7 @@
 ## Backend (Go)
 
 ### Technologies
-- Web Framework: Fiber (gofiber/fiber/v2) - a fast Express-inspired web framework
+- Web Framework: Fiber (gofiber/fiber/v2) - a fast Express-inspired web framework 
 - Database: MongoDB with the official Go driver (go.mongodb.org/mongo-driver)
 - Environment Variables: godotenv for loading .env configuration files
 - Hot Reload: Using Air (air.toml) for development with auto-reload
@@ -74,9 +74,11 @@ go run main.go
 react-go/
   ├── air.toml              # Air configuration for hot reload
   ├── client/               # React frontend application
+  ├── mcp-server/           # MCP server (Todo API as AI tools)
   ├── go.mod                # Go module definition
   ├── go.sum                # Go module checksum
   ├── main.go               # Go backend entry point
+  ├── MCP_SERVER_GUIDE.md   # Hướng dẫn MCP server
   └── tmp/                  # Temporary directory used by Air
 ```
 
@@ -105,6 +107,15 @@ npm run build
 go run main.go
 ```
 3. Open your browser at http://localhost:5000
+
+### MCP Server (optional)
+
+To let AI assistants (e.g. Cursor, Claude Desktop) manage todos via MCP tools, see [MCP_SERVER_GUIDE.md](MCP_SERVER_GUIDE.md).
+
+**Quick test (no Cursor needed):**
+1. Start the Go backend: `air` or `go run main.go` (keep it running).
+2. In another terminal: `cd mcp-server && npm install && npm run build && npm run test:mcp` — this runs a script that calls the MCP server and prints `list_todos` result.
+3. To use in Cursor: add the MCP server to Cursor settings (see the guide), then ask the AI e.g. "list my todos" or "add a todo: buy milk".
 
 < ------------------------------------------------------------------------------------------------------ >
 

@@ -1,7 +1,24 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import TodoForm from '../TodoForm';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BASE_URL } from '../../App';
+
+// Mock react-query
+vi.mock('@tanstack/react-query', async () => {
+  const actual = await vi.importActual('@tanstack/react-query');
+  const mockInvalidateQueries = vi.fn();
+  
+  return {
+    ...(actual as object),
+    useQueryClient: () => ({
+      invalidateQueries: mockInvalidateQueries
+    }),
+    // Original exports we need for the wrapper
+    QueryClient: (actual as Record<string, unknown>).QueryClient,
+    QueryClientProvider: (actual as Record<string, unknown>).QueryClientProvider
+  };
+});
 
 // Tạo wrapper với QueryClientProvider cho testing
 const createWrapper = () => {
@@ -21,6 +38,17 @@ const createWrapper = () => {
 };
 
 describe('TodoForm Component', () => {
+  beforeEach(() => {
+    // Reset mocks before each test
+    vi.restoreAllMocks();
+    
+    // Mock fetch API
+    window.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ _id: 123, body: "New test todo", completed: false })
+    });
+  });
+  
   it('renders input field and add button', () => {
     render(
       <TodoForm />, 
@@ -51,35 +79,50 @@ describe('TodoForm Component', () => {
     expect(inputElement.value).toBe('New test todo');
   });
   
-  it('submits form with input value', async () => {
-    try {
-      // Mock fetch function
-      const originalFetch = window.fetch;
-      window.fetch = vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve({ success: true }),
-      });
-      
-      render(
-        <TodoForm />, 
-        { wrapper: createWrapper() }
+  it('calls API to create todo when form is submitted', async () => {
+    render(
+      <TodoForm />, 
+      { wrapper: createWrapper() }
+    );
+    
+    // Tìm input và button
+    const inputElement = screen.getByRole('textbox') as HTMLInputElement;
+    const buttonElement = screen.getByRole('button');
+    
+    // Nhập text và submit form
+    fireEvent.change(inputElement, { target: { value: 'New test todo' } });
+    fireEvent.click(buttonElement);
+    
+    // Kiểm tra fetch đã được gọi đúng cách
+    await waitFor(() => {
+      expect(window.fetch).toHaveBeenCalledWith(
+        `${BASE_URL}/todos`,
+        expect.objectContaining({
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ body: 'New test todo' }),
+        })
       );
-      
-      // Tìm input và button
-      const inputElement = screen.getByRole('textbox') as HTMLInputElement;
-      const buttonElement = screen.getByRole('button');
-      
-      // Nhập text và submit form
-      fireEvent.change(inputElement, { target: { value: 'New test todo' } });
-      fireEvent.click(buttonElement);
-      
-      // Tạm thời bỏ qua kiểm tra fetch vì có thể gây lỗi
-      // expect(window.fetch).toHaveBeenCalled();
-      
-      // Restore original fetch
-      window.fetch = originalFetch;
-    } catch (error) {
-      console.error('Test error:', error);
-    }
+    });
+  });
+  
+  it('clears input after successful form submission', async () => {
+    render(
+      <TodoForm />, 
+      { wrapper: createWrapper() }
+    );
+    
+    // Tìm input và button
+    const inputElement = screen.getByRole('textbox') as HTMLInputElement;
+    const buttonElement = screen.getByRole('button');
+    
+    // Nhập text và submit form
+    fireEvent.change(inputElement, { target: { value: 'New test todo' } });
+    fireEvent.click(buttonElement);
+    
+    // Kiểm tra input đã được xóa sau khi submit thành công
+    await waitFor(() => {
+      expect(inputElement.value).toBe('');
+    });
   });
 }); 
